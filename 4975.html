@@ -12,11 +12,41 @@
   box-sizing: border-box;
 }
 
-
+.spacer {
+    height: 70px; /* Adjust this value as needed */
+    clear: both; /* Important if your layout uses floats */
+}
 
 .bottom-right-tokens {
   font-weight: bold;
 }
+
+.footer {
+            background-color: #afaaa0; /* Your desired background color */
+            color: #ccc;              /* Your desired text color */
+            padding: 20px;            /* Inner space within the footer */
+            text-align: center;       /* Centers the text */
+            margin-top: 30px;         /* This adds space ABOVE the footer. Adjust as needed (e.g., 80px, 3em) */
+            width: 100%;              /* Explicitly makes the footer 100% wide (of its parent, which is now 100% body) */
+            box-sizing: border-box;   /* Important: Ensures padding is *included* in the 100% width, preventing overflow */
+        }
+
+        /* Styles for links inside the footer */
+        .footer a {
+            color: #e0d9ce; /* Link color */
+            text-decoration: none; /* Removes underline by default */
+        }
+
+        .footer a:hover {
+            text-decoration: underline; /* Adds underline on hover */
+        }
+
+        /* Optional: Basic styling for your main content area */
+        .main-content {
+            min-height: 50vh; /* Ensures content pushes footer down, even if content is short */
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
 
 details.smooth-transition {
   overflow: hidden; /* Hide overflow to ensure smooth transition */
@@ -135,7 +165,7 @@ html, body {
       background-color: #E0D9CE;
       color: #000000;
       margin: 0;
-      padding: 20px;
+      padding: 0px;
       /*background-image: url('logo.png');*/
       background-repeat: no-repeat;
       background-position: center;
@@ -519,5 +549,19 @@ updateTokens(); // initialize once on load
 
 
 
+ <div class="spacer"></div> <footer>
+        </footer>
+
+
+
+    <footer class="footer">
+        <p> Based on "SCP-4975" by Scented_Shadow, licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.en" target="_blank">CC-BY-SA 4.0</a><br></p>
+        <p>
+            Inspired by the <a href="https://scpwiki.com/" target="_blank">SCP Wiki</a><br>
+            Designed by Aeris (aka Pixelbyte)
+        </p>
+    </footer>
+    
+  
 </body>
 </html>
