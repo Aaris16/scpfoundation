@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SCP-4975 | SCP Foundation Database</title>
+  <style>
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+@media screen and (max-width: 768px) {
+  body, html {
+    overflow-x: hidden;
+  }
+}
+
+
+
+.spacer {
+    height: 70px; /* Adjust this value as needed */
+    clear: both; /* Important if your layout uses floats */
+}
+
+.bottom-right-tokens {
+  font-weight: bold;
+}
+
+.footer {
+            background-color: #afaaa0; /* Your desired background color */
+            color: #ccc;              /* Your desired text color */
+            padding: 20px;            /* Inner space within the footer */
+            text-align: center;       /* Centers the text */
+            margin-top: 30px;         /* This adds space ABOVE the footer. Adjust as needed (e.g., 80px, 3em) */
+            width: 100%;              /* Explicitly makes the footer 100% wide (of its parent, which is now 100% body) */
+            box-sizing: border-box;   /* Important: Ensures padding is *included* in the 100% width, preventing overflow */
+        }
+
+        /* Styles for links inside the footer */
+        .footer a {
+            color: #e0d9ce; /* Link color */
+            text-decoration: none; /* Removes underline by default */
+        }
+
+        .footer a:hover {
+            text-decoration: underline; /* Adds underline on hover */
+        }
+
+        /* Optional: Basic styling for your main content area */
+        .main-content {
+            min-height: 50vh; /* Ensures content pushes footer down, even if content is short */
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+
+details.smooth-transition {
+  overflow: hidden; /* Hide overflow to ensure smooth transition */
+  max-height: 0; /* Initially closed */
+  transition: max-height 0.5s ease-in-out; /* Transition on max-height */
+}
+
+details[open] {
+  max-height: 1000px; /* A large enough value for content */
+}
+
+details summary {
+  margin-bottom: 10px; /* Spacing between title and content */
+}
+
+.log-intro {
+  margin-bottom: 20px; /* Space after the first paragraph */
+}
+
+details summary {
+  margin-bottom: 10px; /* Adjust this value as needed */
+}
+
+.log-intro {
+  margin-bottom: 20px;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+.barcode-fixed {
+  position: fixed;
+  bottom: 20px;
+  left: 70px;
+  width: 100px; /* Adjust size as needed */
+  height: auto;
+    transform: scale(3);
+  z-index: 100;
+}
+
+
+.bottom-right-tokens {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  font-family: 'Courier New', monospace;
+  background: rgba(0, 0, 0, 0.7);
+  color: #adadad;
+  padding: 10px 15px;
+  border-radius: 10px;
+  z-index: 999;
+  box-shadow: 0 0 8px rgba(0,0,0,0.4);
+}
+.bottom-right-tokens p {
+  margin: 5px 0;
+  font-size: 1rem;
+}
+
+.connection-status {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: #adadad; /* Green color for the text */
+}
+
+.connection-status .dot {
+  width: 10px;
+  height: 10px;
+  background-color: #11d560; /* Green dot */
+  border-radius: 50%;
+  margin-right: 5px;
+  animation: flicker 1s infinite alternate;
+}
+
+@media screen and (max-width: 768px) {
+  .barcode-fixed {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .top-right-nav {
+    display: none;
+  }
+}
+
+@keyframes flicker {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.poem-intro {
+  margin-bottom: 20px; /* You can increase this if you want more space */
+}
+
+.header-4975 {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  display: block;
+}
+
+.header-4975 img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: -0px;
+  transform: scale(1.05) translateY(-20px); 
+
+  padding: 0;
+  border: none;
+}
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #E0D9CE;
+      overflow-x: hidden;
+      width: 100%;
+      color: #000000;
+      margin: 0;
+      padding: 0px;
+      /*background-image: url('logo.png');*/
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 80%;
+      background-attachment: fixed;
+      opacity: 1;
+    }
+
+    .header-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 0;
+  transform: scale(1.4);
+  padding: 0;
+  border: none;
+  box-shadow: none;
+  object-fit: contain; /* Or 'cover' if you want it cropped artistically */
+  background-color: transparent;
+}
+
+
+
+    .overlay {
+      background-color: #E0D9CE;
+      padding: 0px;
+      max-width: 700px;
+      margin: auto;
+      border-radius: 12px;
+      position: relative;
+      z-index: 1;
+      margin-top: 40px;
+    }
+
+    h1, h2 {
+      color: #000000;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+
+    .label {
+      font-weight: bold;
+      color: #999;
+    }
+
+    .section {
+      margin-bottom: 20px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      margin: 2px;
+      border-radius: 8px;
+      font-size: 0.9em;
+    }
+
+    /*.clearance { background: #444; color: #fff; 
+    .threat { background: #8b0000; color: #fff; }
+    .danger-low { background: #3b7e2f; }
+    .danger-med { background: #c79b00; }
+    .danger-high { background: #c10000; }*/
+
+    .floating-left-image {
+  position: fixed;
+  top: 300px;
+  left: 90px;
+  width: 250px;
+  z-index: 1;
+  text-align: center;
+  color: #000000;
+  font-size: 0.85em;
+  font-style: italic;
+  line-height: 1.2;
+}
+
+.top-right-text {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 100;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 1rem;
+  color: #000000;
+  background: transparent;
+}
+
+.top-right-text a {
+  color: #e9e9e9;
+  text-decoration: none;
+}
+
+.top-right-text a:hover {
+  text-decoration: underline;
+}
+
+.top-right-nav {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 100;
+  background-color: rgba(20, 20, 20, 0.8);
+  padding: 10px 15px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+}
+
+@media screen and (max-width: 768px) {
+  .floating-left-image {
+    display: none;
+  }
+}
+
+/* Profile link styling */
+.profile-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none; /* Removes default underline on link */
+}
+
+/* Profile image styling */
+.profile-image {
+  width: 40px; /* Square size */
+  height: 40px;
+  border-radius: 10px; /* Rounded corners */
+  margin-right: 10px; /* Space between image and text */
+}
+
+/* Profile text styling */
+.profile-text {
+  color: #d6d6d6;
+  font-size: 1.2rem; /* Slightly larger text */
+  font-family: 'Segoe UI', sans-serif;
+  font-weight: bold;
+}
+
+.profile-link:hover .profile-text {
+  color: #d2d2d2; /* Change color on hover */
+}
+
+.profile-link:hover .profile-image {
+  filter: brightness(1.2); /* Slight effect when hovering on the image */
+}
+
+.floating-left-image img {
+  width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+  transition: transform 0.3s ease-out;
+}
+
+#loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: #e1e1e1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  transition: opacity 1s ease;
+}
+
+.loading-image {
+  width: 120px;
+  height: 120px;
+  animation: spinStep 2s ease-in-out infinite;
+  filter: brightness(0) invert(0); /* makes dark image white */
+  transform-origin: center center; /* ✅ ensures smooth spin */
+  display: block;
+}
+
+@keyframes spinStep {
+  0% { transform: rotate(0deg); }
+  75% { transform: rotate(120deg); } /* 3s */
+  100% { transform: rotate(120deg); } /* hold for 1s */
+}
+
+body.loaded #loading-overlay {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.center-text {
+  text-align: center;
+  width: 100%;
+  margin: 0 auto; /* This is to make sure it's centered if it has a defined width */
+}
+
+.floating-left-image figcaption {
+  margin-top: 8px;
+}
+    details {
+  background-color: #141414;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  color: #ffffff; /* Make content inside white */
+}
+
+details * {
+  font-weight: normal;
+  color: #ffffff;
+}
+
+summary {
+  cursor: pointer;
+  font-weight: normal;
+  color: #ffffff; /* Make summary text white */
+}
+
+    a { color: #000000; text-decoration: none; }
+
+
+    
+  </style>
+</head>
+
+
+<body>
+
+
+  <div class="header-4975">
+  <img src="headerzoology.png" alt="Header Image" />
+</div>
+
+
+
+  <div class="overlay">
+
+    <div class="section">
+  <p class="center-text">Databse> Departement of Containment> Parabiology Section> Parazoology Division</p>
+</div>
+
+
+    <img src="info4975.png" alt="SCP Foundation Header" class="header-image" />
+
+    <div id="loading-overlay">
+      <img src="logo.png" alt="Loading" class="loading-image" />
+    </div>
+   
+    <figure class="floating-left-image">
+      <img src="4975.png" alt="SCP Image" />
+      <figcaption>SCP-4975 in its containment cell.</figcaption>
+    </figure>
+
+    <nav class="top-right-nav">
+  <!-- New Profile link with image and SCiPNET text -->
+  <a href="index.html" class="profile-link">
+    <img src="profile.png" alt="Profile" class="profile-image">
+    <span class="profile-text">SCiPNET</span>
+  </a>
+</nav>
+    
+
+    <div class="section">
+      <h2>Special Containment Procedures</h2>
+      <p>Item 4975 is to be contained in a standard steel containment cell. Human contact with SCP-4975 is prohibited. In case of a containment breach, any Foundation personnel persistently hearing a rhythmic cracking noise are to isolate themselves and wait until SCP-4975 is put back in its containment chamber or the cracking stops.</p>
+    </div>
+
+    <div class="section">
+      <h2>Description</h2>
+      <p>SCP-4975 is a vaguely humanoid entity with various avian attributes, the most notable of which is its beak. Its body structure is long and thin overall, and its limbs taper off into formless extremities, lacking distinct digits. A thick, hardened skin layer covers the entirety of its body, including its beak.
+
+        Its cervical vertebrae are not interconnected, and appear to be able to move independently of one another. SCP-4975 continuously rotates them one vertebra at a time, from back to front, ending with its head, in a rhythmic fashion. This produces a clicking or cracking sound with each movement. SCP-4975 only stops moving its neck in this manner when it is preparing for an attack.
+       </p>
+    </div>
+
+    <div class="section">
+      <p>SCP-4975 has been observed to stalk future victims for extended periods of time before finally deciding to attack, sometimes for more than 10 months. It kills its victim by means of its appendages, which it uses to bludgeon and tear at the victim's body. It will always eat the cadaver afterward, with an average adult human appearing to last it about 3 months.
+        
+        SCP-4975 is thought to be the subject of multiple folk tales from Germany, its country of origin. Evidence of SCP-4975 dates as far back as 1538, with both written and visual artistic depictions of it having been uncovered from that time period. Multiple German nursery rhymes that are thought to concern SCP-4975 have also been uncovered, see Addendum 4975-B. 
+    </p>
+    </div>
+
+    <div class="section">
+      <p>Despite SCP-4975's permanent presence in its containment cell, new incidents and sightings continue to be reported from its region of origin. <s>Investigation by Foundation operatives is currently underway.</s> Investigation discontinued indefinitely. Reclassification to Keter approved by the Department of Containment. </p>
+    </div>
+    
+
+      <details class="addendum" id="addendum1">
+  <summary>Addendum 4975-A: Interview Log</summary>
+
+  <p class="log-intro"><strong>Dr. █████:</strong> Can you explain what you saw?</p>
+
+  <p>
+    <strong>The following event log details the contents of a video captured by the bodycam of one of the Foundation operatives investigating recent SCP-4975-related reports near the Black Forest (Schwarzwald), Germany. No audio was recorded.</strong><br><br>
+
+    Begin Log, 16-09-2002, 13:52:49<br><br>
+
+    <strong>Foreword:</strong> Foundation operatives were investigating a Freiburg citizen who had told local law enforcement that he had been hearing a rhythmic clicking noise for over 4 months, and that someone was stalking him. The operatives had taken him into their custody and told law enforcement that he experienced paranoia and auditory hallucinations due to side effects of the chemotherapy he was receiving at that time as a cover-up. The following was recorded on the day they had ordered the man to show them where he had last seen SCP-4975.<br><br>
+
+    Several armed Foundation operatives are walking in a wooded area. One can be seen talking into a handheld transceiver. A Freiburg citizen is among them. He appears to be out of breath and nervous, looking around frantically and clutching his arms to his chest. After a few minutes go by, he freezes in place. He says something and points towards a tree. Some of the operatives turn to see what he is looking at. They appear confused. There is nothing behind the tree visible on camera. The man seems to panic and stumbles backwards, still pointing at nothing.<br><br>
+
+    <strong>Note:</strong> According to surveillance footage, at this exact time, SCP-4975 had stopped rotating its neck and was instead staring motionless at the southeastern corner of its containment cell.<br><br>
+
+    Suddenly, the local man is forcibly thrown to the ground. He is struck multiple times in the head and torso by an unseen aggressor. Several operatives fire at the presumed source of the attack, but hit nothing. One attempts to grab the man and drag him away, but a large wound starts appearing on his midriff, from where he seems to be anchored. The operative gives up after attempting to move the man only further tears open the wound. The operative talking into the handheld transceiver then raises his firearm and shoots the local man in the head, killing him. After a few moments, strips of flesh start to get ripped off the dead body one by one. Once the strips are completely detached from the body, they vanish.<br><br>
+
+    <strong>Note:</strong> At this time, SCP-4975, which had not been fed, appeared to be eating.<br><br>
+
+    End Log, 16-09-2002, 13:57:02
+  </p>
+</details>
+
+
+ <details class="addendum" id="addendum-173-2">
+  <summary>Addendum 4975-B: Incident Report 173-A</summary>
+  <div class="content">
+    <p style="margin-bottom: 20px;">
+      An old nursery rhyme from Germany, believed to be about SCP-4975. It has lost most of its rhyming scheme due to being translated from German.
+    </p>
+    <p style="white-space: pre-line;">
+      "Tick tock", the cuckoo clock ticks.  
+      "Cuckoo", the bird inside sings.  
+      Tick tock tick tock tick tock tick tock.
+
+      As ticks the time, so ticks your heart.  
+      May you live long as you hear its song.  
+      Tick tock tick tock tick tock tick tock.
+
+      Listen close, for when it stops  
+      the hatchling comes out of its home.  
+      Tick tock tick tock tick tock tick—
+
+      Did you hear it? Did it stop?  
+      My child, it meant your time was up.
+    </p>
+  </div>
+</details>
+
+    </div>
+
+
+  </div>
+
+  <img src="barcode4975.png" alt="Barcode" class="barcode-fixed" />
+
+<div class="bottom-right-tokens">
+  <p id="tokn">TOKN: <span></span></p>
+  <p id="auth">AUTH: <span></span></p>
+  <div class="connection-status">
+    <span class="dot"></span> <span>CONNECTED</span>
+  </div>
+</div>
+
+  <script>
+    //const image = document.querySelector('.floating-left-image');
+  
+   // window.addEventListener('scroll', () => {
+      //const scrollY = window.scrollY;
+     // const offset = Math.sin(scrollY / 200) * 15;
+      //image.style.transform = `translateY(${offset}px)`;
+    //});
+  </script>
+
+<script>
+  // After 10 seconds, fade out the overlay
+  setTimeout(() => {
+    document.body.classList.add('loaded');
+  }, 5000); // 10 seconds
+</script>
+
+<script>
+function generateRandomToken(length) {
+  const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  for (let i = 0; i < length; i++) {
+    result += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return result;
+}
+
+function updateTokens() {
+  document.getElementById('tokn').querySelector('span').textContent = generateRandomToken(8);
+  document.getElementById('auth').querySelector('span').textContent = generateRandomToken(8);
+}
+
+// Update every 2 seconds
+setInterval(updateTokens, 1000);
+updateTokens(); // initialize once on load
+</script>
+
+
+
+
+ <div class="spacer"></div> 
+
+
+
+    <footer class="footer">
+        <p> Based on "SCP-4975" by Scented_Shadow, licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.en" target="_blank">CC-BY-SA 4.0</a><br></p>
+        <p>
+            Inspired by the <a href="https://scpwiki.com/" target="_blank">SCP Wiki</a><br>
+            Designed by Aeris (aka Pixelbyte)
+        </p>
+    </footer>
+    
+  
+</body>
+</html>
